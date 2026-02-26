@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <div className="min-h-screen bg-gradient-hero flex items-center justify-center text-foreground">Loading...</div>;
   if (user) return <Navigate to="/" replace />;
   return <>{children}</>;
 };
