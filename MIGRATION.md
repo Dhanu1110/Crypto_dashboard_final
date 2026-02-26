@@ -34,7 +34,7 @@ npm install
 Set these in your Supabase project under **Project Settings > Secrets**:
 
 ```
-GEMINI_API_KEY=AIzaSyApmUTkCm8e7YMXytgOJoNP8F23lugP_eU
+GEMINI_API_KEY=<your_gemini_api_key>
 SERPAPI_KEY=your_serpapi_key
 ```
 
