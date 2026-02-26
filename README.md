@@ -1,73 +1,73 @@
-# Welcome to your Lovable project
+# CryptoTracker Pro
 
-## Project info
+A professional cryptocurrency portfolio tracker with real-time data, AI-powered insights, and comprehensive market analysis.
 
-**URL**: https://lovable.dev/projects/9e2dda6c-d32f-477b-80ab-d9a06cf91e59
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/9e2dda6c-d32f-477b-80ab-d9a06cf91e59) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Frontend**: React 18 + TypeScript + Vite
+- **UI**: shadcn-ui + Tailwind CSS + Framer Motion
+- **Backend**: Supabase (Auth, Database, Edge Functions)
+- **AI**: Google Gemini API
+- **Real-time Data**: CoinGecko API
 
-## How can I deploy this project?
+## Getting Started
 
-Simply open [Lovable](https://lovable.dev/projects/9e2dda6c-d32f-477b-80ab-d9a06cf91e59) and click on Share -> Publish.
+### Install Dependencies
 
-## Can I connect a custom domain to my Lovable project?
+```sh
+npm install
+```
 
-Yes, you can!
+### Development
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```sh
+npm run dev
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+The app will run at `http://localhost:8080/`
+
+### Build
+
+```sh
+npm run build
+```
+
+## Environment Variables
+
+### Client Environment (`.env`)
+
+```
+VITE_SUPABASE_PROJECT_ID=your_project_id
+VITE_SUPABASE_URL=https://your_project.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
+```
+
+### Supabase Secrets
+
+Set these in your Supabase project under **Project Settings > Secrets**:
+
+```
+GEMINI_API_KEY=your_gemini_api_key
+SERPAPI_KEY=your_serpapi_key
+```
+
+## Features
+
+- 🔐 User authentication with Supabase Auth
+- 💼 Portfolio management (add/edit/delete holdings)
+- 📊 Real-time cryptocurrency data from CoinGecko
+- 🤖 AI-powered portfolio analysis using Google Gemini
+- 💬 AI chat assistant with web search integration
+- 🚨 Price alerts for cryptocurrencies
+- 📈 Technical analysis and market insights
+- 🌙 Dark mode support
+
+## Deployment
+
+Deploy to Vercel or any Node.js hosting platform:
+
+1. Set environment variables in your hosting platform
+2. Run `npm run build`
+3. Deploy the `dist` folder

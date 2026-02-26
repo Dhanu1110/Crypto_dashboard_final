@@ -39,14 +39,14 @@ serve(async (req) => {
     const requestData: AnalysisRequest = await req.json();
     const { type = 'market-analysis', selectedCoin, marketData = [], portfolioData = [], holdings = [] } = requestData;
     
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
-    if (!lovableApiKey) {
-      throw new Error('Lovable API key not configured');
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+    if (!geminiApiKey) {
+      throw new Error('Gemini API key not configured');
     }
 
     // Handle portfolio analysis
     if (type === 'portfolio-analysis') {
-      const portfolioAnalysis = await generatePortfolioAnalysis(holdings, marketData, lovableApiKey);
+      const portfolioAnalysis = await generatePortfolioAnalysis(holdings, marketData, geminiApiKey);
       return new Response(JSON.stringify(portfolioAnalysis), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -69,7 +69,7 @@ serve(async (req) => {
     };
 
     const technicalAnalysis = generateTechnicalAnalysis(coinData, marketData);
-    const aiInsights = await generateAIInsights(coinData, marketData, lovableApiKey);
+    const aiInsights = await generateAIInsights(coinData, marketData, geminiApiKey);
     const predictions = generatePredictions(coinData, technicalAnalysis, aiInsights);
     const insights = generateMarketInsights(coinData, marketData, portfolioData, aiInsights);
 
@@ -148,28 +148,32 @@ async function generateAIInsights(coinData: CryptoData, marketData: CryptoData[]
   try {
     const prompt = `Analyze ${coinData.name} (${coinData.symbol}) with current price $${coinData.current_price}, 24h change: ${coinData.price_change_percentage_24h?.toFixed(2)}%. Provide a brief technical sentiment analysis in one sentence.`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: 'You are a crypto market analyst. Provide concise technical analysis in one sentence.' },
-          { role: 'user', content: prompt }
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: 'You are a crypto market analyst. Provide concise technical analysis in one sentence. ' + prompt }
+            ]
+          }
         ],
-        max_tokens: 100
+        generationConfig: {
+          maxOutputTokens: 100,
+        }
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`Lovable AI error: ${response.status}`);
+      throw new Error(`Gemini error: ${response.status}`);
     }
 
     const result = await response.json();
-    return result.choices?.[0]?.message?.content || "Market analysis indicates mixed signals based on current price action.";
+    return result.candidates?.[0]?.content?.parts?.[0]?.text || "Market analysis indicates mixed signals based on current price action.";
   } catch (error) {
     console.error('AI insights generation failed:', error);
     return "Technical analysis suggests monitoring current price levels for potential breakout patterns.";
@@ -308,25 +312,29 @@ async function generatePortfolioAnalysis(holdings: any[], marketData: CryptoData
 
   let aiAnalysis = 'Portfolio shows moderate diversification. Consider rebalancing if any single holding exceeds 40% of total value.';
   try {
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: 'You are a crypto portfolio analyst. Provide concise, actionable advice.' },
-          { role: 'user', content: prompt }
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: 'You are a crypto portfolio analyst. Provide concise, actionable advice. ' + prompt }
+            ]
+          }
         ],
-        max_tokens: 200
+        generationConfig: {
+          maxOutputTokens: 200,
+        }
       }),
     });
 
     if (response.ok) {
       const result = await response.json();
-      aiAnalysis = result.choices?.[0]?.message?.content || aiAnalysis;
+      aiAnalysis = result.candidates?.[0]?.content?.parts?.[0]?.text || aiAnalysis;
     }
   } catch (error) {
     console.error('AI analysis failed:', error);
